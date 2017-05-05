@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FaceLivenessDetection/LandmarkDetector/src/LandmarkDetectorFunc.cpp"
+            timestampString = "515647408.002478"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
+            landmarkName = "LandmarkDetector::DetectLandmarksInVideo(const cv::Mat_&lt;uchar&gt; &amp;grayscale_image, const cv::Mat_&lt;float&gt; &amp;depth_image, CLNF&amp; clnf_model, FaceModelParameters&amp; params)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
