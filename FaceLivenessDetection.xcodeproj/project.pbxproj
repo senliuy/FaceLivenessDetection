@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C505FFE1EBC4A9A004A08B9 /* lab_boosted_classifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FEE1EBC4A99004A08B9 /* lab_boosted_classifier.cpp */; };
+		4C505FFF1EBC4A9A004A08B9 /* mlp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FEF1EBC4A99004A08B9 /* mlp.cpp */; };
+		4C5060001EBC4A9A004A08B9 /* surf_mlp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF01EBC4A99004A08B9 /* surf_mlp.cpp */; };
+		4C5060011EBC4A9A004A08B9 /* face_detection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF11EBC4A99004A08B9 /* face_detection.cpp */; };
+		4C5060021EBC4A9A004A08B9 /* lab_feature_map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF31EBC4A99004A08B9 /* lab_feature_map.cpp */; };
+		4C5060031EBC4A9A004A08B9 /* surf_feature_map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF41EBC4A99004A08B9 /* surf_feature_map.cpp */; };
+		4C5060041EBC4A9A004A08B9 /* fust.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF51EBC4A99004A08B9 /* fust.cpp */; };
+		4C5060051EBC4A9A004A08B9 /* lab_boost_model_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF71EBC4A99004A08B9 /* lab_boost_model_reader.cpp */; };
+		4C5060061EBC4A9A004A08B9 /* surf_mlp_model_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF81EBC4A99004A08B9 /* surf_mlp_model_reader.cpp */; };
+		4C5060081EBC4A9A004A08B9 /* image_pyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FFC1EBC4A99004A08B9 /* image_pyramid.cpp */; };
+		4C5060091EBC4A9A004A08B9 /* nms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FFD1EBC4A99004A08B9 /* nms.cpp */; };
 		4CFF5EE11EBAFC3E002F4DA8 /* LivenessDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF5EE01EBAFC3E002F4DA8 /* LivenessDetection.cpp */; };
 		4CFF5F591EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF5F4E1EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp */; };
 		4CFF5F5A1EBAFCB3002F4DA8 /* LandmarkDetectionValidator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF5F4F1EBAFCB3002F4DA8 /* LandmarkDetectionValidator.cpp */; };
@@ -42,6 +53,34 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C505FEE1EBC4A99004A08B9 /* lab_boosted_classifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lab_boosted_classifier.cpp; sourceTree = "<group>"; };
+		4C505FEF1EBC4A99004A08B9 /* mlp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mlp.cpp; sourceTree = "<group>"; };
+		4C505FF01EBC4A99004A08B9 /* surf_mlp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surf_mlp.cpp; sourceTree = "<group>"; };
+		4C505FF11EBC4A99004A08B9 /* face_detection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = face_detection.cpp; path = seetaFace/src/face_detection.cpp; sourceTree = "<group>"; };
+		4C505FF31EBC4A99004A08B9 /* lab_feature_map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lab_feature_map.cpp; sourceTree = "<group>"; };
+		4C505FF41EBC4A99004A08B9 /* surf_feature_map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surf_feature_map.cpp; sourceTree = "<group>"; };
+		4C505FF51EBC4A99004A08B9 /* fust.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fust.cpp; path = seetaFace/src/fust.cpp; sourceTree = "<group>"; };
+		4C505FF71EBC4A99004A08B9 /* lab_boost_model_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lab_boost_model_reader.cpp; sourceTree = "<group>"; };
+		4C505FF81EBC4A99004A08B9 /* surf_mlp_model_reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surf_mlp_model_reader.cpp; sourceTree = "<group>"; };
+		4C505FFC1EBC4A99004A08B9 /* image_pyramid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_pyramid.cpp; sourceTree = "<group>"; };
+		4C505FFD1EBC4A99004A08B9 /* nms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nms.cpp; sourceTree = "<group>"; };
+		4C50600C1EBC4ABF004A08B9 /* lab_boosted_classifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lab_boosted_classifier.h; sourceTree = "<group>"; };
+		4C50600D1EBC4ABF004A08B9 /* mlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mlp.h; sourceTree = "<group>"; };
+		4C50600E1EBC4ABF004A08B9 /* surf_mlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surf_mlp.h; sourceTree = "<group>"; };
+		4C50600F1EBC4ABF004A08B9 /* classifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = classifier.h; path = seetaFace/include/classifier.h; sourceTree = "<group>"; };
+		4C5060101EBC4ABF004A08B9 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = seetaFace/include/common.h; sourceTree = "<group>"; };
+		4C5060111EBC4ABF004A08B9 /* detector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = detector.h; path = seetaFace/include/detector.h; sourceTree = "<group>"; };
+		4C5060121EBC4ABF004A08B9 /* face_detection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = face_detection.h; path = seetaFace/include/face_detection.h; sourceTree = "<group>"; };
+		4C5060141EBC4ABF004A08B9 /* lab_feature_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lab_feature_map.h; sourceTree = "<group>"; };
+		4C5060151EBC4ABF004A08B9 /* surf_feature_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surf_feature_map.h; sourceTree = "<group>"; };
+		4C5060161EBC4ABF004A08B9 /* feature_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = feature_map.h; path = seetaFace/include/feature_map.h; sourceTree = "<group>"; };
+		4C5060171EBC4ABF004A08B9 /* fust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fust.h; path = seetaFace/include/fust.h; sourceTree = "<group>"; };
+		4C5060191EBC4ABF004A08B9 /* lab_boost_model_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lab_boost_model_reader.h; sourceTree = "<group>"; };
+		4C50601A1EBC4ABF004A08B9 /* surf_mlp_model_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surf_mlp_model_reader.h; sourceTree = "<group>"; };
+		4C50601B1EBC4ABF004A08B9 /* model_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = model_reader.h; path = seetaFace/include/model_reader.h; sourceTree = "<group>"; };
+		4C50601D1EBC4ABF004A08B9 /* image_pyramid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_pyramid.h; sourceTree = "<group>"; };
+		4C50601E1EBC4ABF004A08B9 /* math_func.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_func.h; sourceTree = "<group>"; };
+		4C50601F1EBC4ABF004A08B9 /* nms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nms.h; sourceTree = "<group>"; };
 		4CFF5ED61EBAFB75002F4DA8 /* FaceLivenessDetection */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FaceLivenessDetection; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CFF5EE01EBAFC3E002F4DA8 /* LivenessDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LivenessDetection.cpp; sourceTree = "<group>"; };
 		4CFF5F4E1EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCNF_patch_expert.cpp; path = LandmarkDetector/src/CCNF_patch_expert.cpp; sourceTree = "<group>"; };
@@ -96,6 +135,129 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C505FEB1EBC4A6B004A08B9 /* seetaFace */ = {
+			isa = PBXGroup;
+			children = (
+				4C50600A1EBC4AA5004A08B9 /* include */,
+				4C505FEC1EBC4A76004A08B9 /* src */,
+			);
+			name = seetaFace;
+			sourceTree = "<group>";
+		};
+		4C505FEC1EBC4A76004A08B9 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4C505FED1EBC4A99004A08B9 /* classifier */,
+				4C505FF11EBC4A99004A08B9 /* face_detection.cpp */,
+				4C505FF21EBC4A99004A08B9 /* feat */,
+				4C505FF51EBC4A99004A08B9 /* fust.cpp */,
+				4C505FF61EBC4A99004A08B9 /* io */,
+				4C505FFB1EBC4A99004A08B9 /* util */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		4C505FED1EBC4A99004A08B9 /* classifier */ = {
+			isa = PBXGroup;
+			children = (
+				4C505FEE1EBC4A99004A08B9 /* lab_boosted_classifier.cpp */,
+				4C505FEF1EBC4A99004A08B9 /* mlp.cpp */,
+				4C505FF01EBC4A99004A08B9 /* surf_mlp.cpp */,
+			);
+			name = classifier;
+			path = seetaFace/src/classifier;
+			sourceTree = "<group>";
+		};
+		4C505FF21EBC4A99004A08B9 /* feat */ = {
+			isa = PBXGroup;
+			children = (
+				4C505FF31EBC4A99004A08B9 /* lab_feature_map.cpp */,
+				4C505FF41EBC4A99004A08B9 /* surf_feature_map.cpp */,
+			);
+			name = feat;
+			path = seetaFace/src/feat;
+			sourceTree = "<group>";
+		};
+		4C505FF61EBC4A99004A08B9 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				4C505FF71EBC4A99004A08B9 /* lab_boost_model_reader.cpp */,
+				4C505FF81EBC4A99004A08B9 /* surf_mlp_model_reader.cpp */,
+			);
+			name = io;
+			path = seetaFace/src/io;
+			sourceTree = "<group>";
+		};
+		4C505FFB1EBC4A99004A08B9 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				4C505FFC1EBC4A99004A08B9 /* image_pyramid.cpp */,
+				4C505FFD1EBC4A99004A08B9 /* nms.cpp */,
+			);
+			name = util;
+			path = seetaFace/src/util;
+			sourceTree = "<group>";
+		};
+		4C50600A1EBC4AA5004A08B9 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4C50600B1EBC4ABF004A08B9 /* classifier */,
+				4C50600F1EBC4ABF004A08B9 /* classifier.h */,
+				4C5060101EBC4ABF004A08B9 /* common.h */,
+				4C5060111EBC4ABF004A08B9 /* detector.h */,
+				4C5060121EBC4ABF004A08B9 /* face_detection.h */,
+				4C5060131EBC4ABF004A08B9 /* feat */,
+				4C5060161EBC4ABF004A08B9 /* feature_map.h */,
+				4C5060171EBC4ABF004A08B9 /* fust.h */,
+				4C5060181EBC4ABF004A08B9 /* io */,
+				4C50601B1EBC4ABF004A08B9 /* model_reader.h */,
+				4C50601C1EBC4ABF004A08B9 /* util */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		4C50600B1EBC4ABF004A08B9 /* classifier */ = {
+			isa = PBXGroup;
+			children = (
+				4C50600C1EBC4ABF004A08B9 /* lab_boosted_classifier.h */,
+				4C50600D1EBC4ABF004A08B9 /* mlp.h */,
+				4C50600E1EBC4ABF004A08B9 /* surf_mlp.h */,
+			);
+			name = classifier;
+			path = seetaFace/include/classifier;
+			sourceTree = "<group>";
+		};
+		4C5060131EBC4ABF004A08B9 /* feat */ = {
+			isa = PBXGroup;
+			children = (
+				4C5060141EBC4ABF004A08B9 /* lab_feature_map.h */,
+				4C5060151EBC4ABF004A08B9 /* surf_feature_map.h */,
+			);
+			name = feat;
+			path = seetaFace/include/feat;
+			sourceTree = "<group>";
+		};
+		4C5060181EBC4ABF004A08B9 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				4C5060191EBC4ABF004A08B9 /* lab_boost_model_reader.h */,
+				4C50601A1EBC4ABF004A08B9 /* surf_mlp_model_reader.h */,
+			);
+			name = io;
+			path = seetaFace/include/io;
+			sourceTree = "<group>";
+		};
+		4C50601C1EBC4ABF004A08B9 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				4C50601D1EBC4ABF004A08B9 /* image_pyramid.h */,
+				4C50601E1EBC4ABF004A08B9 /* math_func.h */,
+				4C50601F1EBC4ABF004A08B9 /* nms.h */,
+			);
+			name = util;
+			path = seetaFace/include/util;
+			sourceTree = "<group>";
+		};
 		4CFF5ECD1EBAFB75002F4DA8 = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +278,7 @@
 		4CFF5ED81EBAFB75002F4DA8 /* FaceLivenessDetection */ = {
 			isa = PBXGroup;
 			children = (
+				4C505FEB1EBC4A6B004A08B9 /* seetaFace */,
 				4CFF5EE31EBAFC50002F4DA8 /* LandmarkDetector */,
 				4CFF5EE01EBAFC3E002F4DA8 /* LivenessDetection.cpp */,
 			);
@@ -241,17 +404,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C5060011EBC4A9A004A08B9 /* face_detection.cpp in Sources */,
+				4C5060031EBC4A9A004A08B9 /* surf_feature_map.cpp in Sources */,
 				4CFF5F591EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp in Sources */,
 				4CFF5F5C1EBAFCB3002F4DA8 /* LandmarkDetectorModel.cpp in Sources */,
+				4C5060001EBC4A9A004A08B9 /* surf_mlp.cpp in Sources */,
 				4CFF5F5B1EBAFCB3002F4DA8 /* LandmarkDetectorFunc.cpp in Sources */,
+				4C5060091EBC4A9A004A08B9 /* nms.cpp in Sources */,
+				4C5060051EBC4A9A004A08B9 /* lab_boost_model_reader.cpp in Sources */,
 				4CFF5F5D1EBAFCB3002F4DA8 /* LandmarkDetectorParameters.cpp in Sources */,
 				4CFF5F5F1EBAFCB3002F4DA8 /* Patch_experts.cpp in Sources */,
+				4C5060021EBC4A9A004A08B9 /* lab_feature_map.cpp in Sources */,
 				4CFF5EE11EBAFC3E002F4DA8 /* LivenessDetection.cpp in Sources */,
 				4CFF5F631EBAFCB3002F4DA8 /* SVR_patch_expert.cpp in Sources */,
+				4C5060081EBC4A9A004A08B9 /* image_pyramid.cpp in Sources */,
 				4CFF5F601EBAFCB3002F4DA8 /* PAW.cpp in Sources */,
 				4CFF5F611EBAFCB3002F4DA8 /* PDM.cpp in Sources */,
+				4C5060041EBC4A9A004A08B9 /* fust.cpp in Sources */,
 				4CFF5F621EBAFCB3002F4DA8 /* stdafx.cpp in Sources */,
+				4C505FFE1EBC4A9A004A08B9 /* lab_boosted_classifier.cpp in Sources */,
+				4C505FFF1EBC4A9A004A08B9 /* mlp.cpp in Sources */,
 				4CFF5F5A1EBAFCB3002F4DA8 /* LandmarkDetectionValidator.cpp in Sources */,
+				4C5060061EBC4A9A004A08B9 /* surf_mlp_model_reader.cpp in Sources */,
 				4CFF5F5E1EBAFCB3002F4DA8 /* LandmarkDetectorUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,8 +530,9 @@
 					/usr/local/include,
 					/usr/local/include/opencv,
 					/include,
-					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/../LandmarkDetector/include,
+					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/LandmarkDetector/include,
 					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/./include,
+					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -376,8 +551,9 @@
 					/usr/local/include,
 					/usr/local/include/opencv,
 					/include,
-					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/../LandmarkDetector/include,
+					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/LandmarkDetector/include,
 					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/./include,
+					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -407,6 +583,7 @@
 				4CFF5EDF1EBAFB75002F4DA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

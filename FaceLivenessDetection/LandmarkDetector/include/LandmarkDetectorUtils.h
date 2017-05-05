@@ -65,6 +65,9 @@
 
 #include "LandmarkDetectorModel.h"
 
+//seetaFace includes
+#include "face_detection.h"
+
 //using namespace std;
 
 namespace LandmarkDetector
@@ -141,7 +144,11 @@ namespace LandmarkDetector
 	//============================================================================
 	// Face detection helpers
 	//============================================================================
-
+    
+    //Face detection using seetaFace
+    
+    bool seetaDetectFace(std::vector< cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity);
+    
 	// Face detection using Haar cascade classifier
     bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity);
     bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, cv::CascadeClassifier& classifier);

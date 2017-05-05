@@ -1235,6 +1235,9 @@ cv::Vec3d RotationMatrix2AxisAngle(const cv::Matx33d& rotation_matrix)
 //============================================================================
 // Face detection helpers
 //============================================================================
+    
+
+    
 bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity)
 {
     cv::CascadeClassifier classifier("./classifiers/haarcascade_frontalface_alt.xml");
@@ -1249,7 +1252,47 @@ bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<ucha
     }
 
 }
-
+//employing seetaFace to do detection
+bool seetaDetectFace(std::vector< cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity){
+    seeta::FaceDetection detector("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/model/seeta_fd_frontal_v1.0.bin");
+    detector.SetMinFaceSize(40);
+    detector.SetScoreThresh(2.f);
+    detector.SetImagePyramidScaleFactor(0.8f);
+    detector.SetWindowStep(4, 4);
+    
+    cv::Mat img_gray;
+    if(intensity.channels() == 3){
+        cv::cvtColor(intensity, img_gray, cv::COLOR_BGR2GRAY);
+    }else{
+        img_gray = intensity;
+    }
+    
+    seeta::ImageData img_data;
+    img_data.data = img_gray.data;
+    img_data.width = img_gray.cols;
+    img_data.height = img_gray.rows;
+    img_data.num_channels = 1;
+    
+    std::vector<seeta::FaceInfo> face_detections = detector.Detect(img_data);
+    
+    int32_t num_face = static_cast<int32_t>(face_detections.size());
+    
+    o_regions.resize(num_face);
+    
+    for(size_t face = 0; face<num_face; face++){
+        // Correct for scale
+        o_regions[face].width = face_detections[face].bbox.width * 0.8924;
+        o_regions[face].height = face_detections[face].bbox.height * 0.8676;
+        
+        // Move the face slightly to the right (as the width was made smaller)
+        o_regions[face].x = face_detections[face].bbox.x + 0.0578 * face_detections[face].bbox.width;
+        // Shift face down as OpenCV Haar Cascade detects the forehead as well, and we're not interested
+        o_regions[face].y = face_detections[face].bbox.y + face_detections[face].bbox.height * 0.2166;
+    }
+    
+    return o_regions.size()>0;
+}
+    
 bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, cv::CascadeClassifier& classifier)
 {
 
@@ -1286,8 +1329,8 @@ bool DetectSingleFace(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intens
     // The tracker can return multiple faces
     std::vector<cv::Rect_<double> > face_detections;
 
-    bool detect_success = LandmarkDetector::DetectFaces(face_detections, intensity_image, classifier);
-
+//    bool detect_success = LandmarkDetector::DetectFaces(face_detections, intensity_image, classifier);
+    bool detect_success = LandmarkDetector::seetaDetectFace(face_detections, intensity_image);
     if(detect_success)
     {
 
