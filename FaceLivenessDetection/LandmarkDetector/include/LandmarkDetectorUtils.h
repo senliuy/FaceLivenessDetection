@@ -72,108 +72,110 @@
 
 namespace LandmarkDetector
 {
-	//===========================================================================	
-	// Defining a set of useful utility functions to be used within CLNF
-
-
-	//=============================================================================================
-	// Helper functions for parsing the inputs
-	//=============================================================================================
+    //===========================================================================	
+    // Defining a set of useful utility functions to be used within CLNF
+    
+    
+    //=============================================================================================
+    // Helper functions for parsing the inputs
+    //=============================================================================================
     void get_video_input_output_params(std::vector<std::string> &input_video_file, std::vector<std::string> &depth_dir,
-        std::vector<std::string> &output_files, std::vector<std::string> &output_video_files, bool& world_coordinates_pose, std::vector<std::string> &arguments);
-
+                                       std::vector<std::string> &output_files, std::vector<std::string> &output_video_files, bool& world_coordinates_pose, std::vector<std::string> &arguments);
+    
     void get_camera_params(int &device, float &fx, float &fy, float &cx, float &cy, std::vector<std::string> &arguments);
-
+    
     void get_image_input_output_params(std::vector<std::string> &input_image_files, std::vector<std::string> &input_depth_files, std::vector<std::string> &output_feature_files, std::vector<std::string> &output_pose_files, std::vector<std::string> &output_image_files,
-        std::vector<cv::Rect_<double>> &input_bounding_boxes, std::vector<std::string> &arguments);
-
-	//===========================================================================
-	// Fast patch expert response computation (linear model across a ROI) using normalised cross-correlation
-	//===========================================================================
-	// This is a modified version of openCV code that allows for precomputed dfts of templates and for precomputed dfts of an image
-	// _img is the input img, _img_dft it's dft (optional), _integral_img the images integral image (optional), squared integral image (optional), 
-	// templ is the template we are convolving with, templ_dfts it's dfts at varying windows sizes (optional),  _result - the output, method the type of convolution
+                                       std::vector<cv::Rect_<double>> &input_bounding_boxes, std::vector<std::string> &arguments);
+    
+    //===========================================================================
+    // Fast patch expert response computation (linear model across a ROI) using normalised cross-correlation
+    //===========================================================================
+    // This is a modified version of openCV code that allows for precomputed dfts of templates and for precomputed dfts of an image
+    // _img is the input img, _img_dft it's dft (optional), _integral_img the images integral image (optional), squared integral image (optional), 
+    // templ is the template we are convolving with, templ_dfts it's dfts at varying windows sizes (optional),  _result - the output, method the type of convolution
     void matchTemplate_m( const cv::Mat_<float>& input_img, cv::Mat_<double>& img_dft, cv::Mat& _integral_img, cv::Mat& _integral_img_sq, const cv::Mat_<float>&  templ, std::map<int, cv::Mat_<double> >& templ_dfts, cv::Mat_<float>& result, int method );
-
-	//===========================================================================
-	// Point set and landmark manipulation functions
-	//===========================================================================
-	// Using Kabsch's algorithm for aligning shapes
-	//This assumes that align_from and align_to are already mean normalised
-	cv::Matx22d AlignShapesKabsch2D(const cv::Mat_<double>& align_from, const cv::Mat_<double>& align_to );
-
-	//=============================================================================
-	// Basically Kabsch's algorithm but also allows the collection of points to be different in scale from each other
-	cv::Matx22d AlignShapesWithScale(cv::Mat_<double>& src, cv::Mat_<double> dst);
-
-	//===========================================================================
-	// Visualisation functions
-	//===========================================================================
-	void Project(cv::Mat_<double>& dest, const cv::Mat_<double>& mesh, double fx, double fy, double cx, double cy);
-	void DrawBox(cv::Mat image, cv::Vec6d pose, cv::Scalar color, int thickness, float fx, float fy, float cx, float cy);
-
-	// Drawing face bounding box
+    
+    //===========================================================================
+    // Point set and landmark manipulation functions
+    //===========================================================================
+    // Using Kabsch's algorithm for aligning shapes
+    //This assumes that align_from and align_to are already mean normalised
+    cv::Matx22d AlignShapesKabsch2D(const cv::Mat_<double>& align_from, const cv::Mat_<double>& align_to );
+    
+    //=============================================================================
+    // Basically Kabsch's algorithm but also allows the collection of points to be different in scale from each other
+    cv::Matx22d AlignShapesWithScale(cv::Mat_<double>& src, cv::Mat_<double> dst);
+    
+    //===========================================================================
+    // Visualisation functions
+    //===========================================================================
+    void Project(cv::Mat_<double>& dest, const cv::Mat_<double>& mesh, double fx, double fy, double cx, double cy);
+    void DrawBox(cv::Mat image, cv::Vec6d pose, cv::Scalar color, int thickness, float fx, float fy, float cx, float cy);
+    
+    // Drawing face bounding box
     std::vector<std::pair<cv::Point, cv::Point>> CalculateBox(cv::Vec6d pose, float fx, float fy, float cx, float cy);
     void DrawBox(std::vector<std::pair<cv::Point, cv::Point>> lines, cv::Mat image, cv::Scalar color, int thickness);
-
+    
     std::vector<cv::Point2d> CalculateLandmarks(const cv::Mat_<double>& shape2D, cv::Mat_<int>& visibilities);
     std::vector<cv::Point2d> CalculateLandmarks(CLNF& clnf_model);
     void DrawLandmarks(cv::Mat img, std::vector<cv::Point> landmarks);
-
-	void Draw(cv::Mat img, const cv::Mat_<double>& shape2D, const cv::Mat_<int>& visibilities);
-	void Draw(cv::Mat img, const cv::Mat_<double>& shape2D);
-	void Draw(cv::Mat img, const CLNF& clnf_model);
-
-
-	//===========================================================================
-	// Angle representation conversion helpers
-	//===========================================================================
-	cv::Matx33d Euler2RotationMatrix(const cv::Vec3d& eulerAngles);
-
-	// Using the XYZ convention R = Rx * Ry * Rz, left-handed positive sign
-	cv::Vec3d RotationMatrix2Euler(const cv::Matx33d& rotation_matrix);
-
-	cv::Vec3d Euler2AxisAngle(const cv::Vec3d& euler);
-
-	cv::Vec3d AxisAngle2Euler(const cv::Vec3d& axis_angle);
-
-	cv::Matx33d AxisAngle2RotationMatrix(const cv::Vec3d& axis_angle);
-
-	cv::Vec3d RotationMatrix2AxisAngle(const cv::Matx33d& rotation_matrix);
-
-	//============================================================================
-	// Face detection helpers
-	//============================================================================
+    
+    void Draw(cv::Mat img, const cv::Mat_<double>& shape2D, const cv::Mat_<int>& visibilities);
+    void Draw(cv::Mat img, const cv::Mat_<double>& shape2D);
+    void Draw(cv::Mat img, const CLNF& clnf_model);
+    
+    
+    //===========================================================================
+    // Angle representation conversion helpers
+    //===========================================================================
+    cv::Matx33d Euler2RotationMatrix(const cv::Vec3d& eulerAngles);
+    
+    // Using the XYZ convention R = Rx * Ry * Rz, left-handed positive sign
+    cv::Vec3d RotationMatrix2Euler(const cv::Matx33d& rotation_matrix);
+    
+    cv::Vec3d Euler2AxisAngle(const cv::Vec3d& euler);
+    
+    cv::Vec3d AxisAngle2Euler(const cv::Vec3d& axis_angle);
+    
+    cv::Matx33d AxisAngle2RotationMatrix(const cv::Vec3d& axis_angle);
+    
+    cv::Vec3d RotationMatrix2AxisAngle(const cv::Matx33d& rotation_matrix);
+    
+    //============================================================================
+    // Face detection helpers
+    //============================================================================
     
     //Face detection using seetaFace
+    bool seetaDetectFace(std::vector< cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, seeta::FaceDetection *detector);
     
-    bool seetaDetectFace(std::vector< cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity);
     
-	// Face detection using Haar cascade classifier
+    // Face detection using Haar cascade classifier
     bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity);
     bool DetectFaces(std::vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, cv::CascadeClassifier& classifier);
-	// The preference point allows for disambiguation if multiple faces are present (pick the closest one), if it is not set the biggest face is chosen
-	bool DetectSingleFace(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intensity, cv::CascadeClassifier& classifier, const cv::Point preference = cv::Point(-1,-1));
-
-	// Face detection using HOG-SVM classifier
-//	bool DetectFacesHOG(vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, std::vector<double>& confidences);
-//    bool DetectFacesHOG(vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, dlib::frontal_face_detector& classifier, std::vector<double>& confidences);
-	// The preference point allows for disambiguation if multiple faces are present (pick the closest one), if it is not set the biggest face is chosen
-//    bool DetectSingleFaceHOG(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intensity, dlib::frontal_face_detector& classifier, double& confidence, const cv::Point preference = cv::Point(-1,-1));
-
-	//============================================================================
-	// Matrix reading functionality
-	//============================================================================
-
-	// Reading a matrix written in a binary format
-	void ReadMatBin(std::ifstream& stream, cv::Mat &output_mat);
-
-	// Reading in a matrix from a stream
-	void ReadMat(std::ifstream& stream, cv::Mat& output_matrix);
-
-	// Skipping comments (lines starting with # symbol)
-	void SkipComments(std::ifstream& stream);
-
+    // The preference point allows for disambiguation if multiple faces are present (pick the closest one), if it is not set the biggest face is chosen
+    bool DetectSingleFace(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intensity, cv::CascadeClassifier& classifier, const cv::Point preference = cv::Point(-1,-1));
+    
+    bool DetectSingleFaceSeetaFace(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intensity_image, seeta::FaceDetection *detector, cv::Point preference);
+    
+    // Face detection using HOG-SVM classifier
+    //	bool DetectFacesHOG(vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, std::vector<double>& confidences);
+    //    bool DetectFacesHOG(vector<cv::Rect_<double> >& o_regions, const cv::Mat_<uchar>& intensity, dlib::frontal_face_detector& classifier, std::vector<double>& confidences);
+    // The preference point allows for disambiguation if multiple faces are present (pick the closest one), if it is not set the biggest face is chosen
+    //    bool DetectSingleFaceHOG(cv::Rect_<double>& o_region, const cv::Mat_<uchar>& intensity, dlib::frontal_face_detector& classifier, double& confidence, const cv::Point preference = cv::Point(-1,-1));
+    
+    //============================================================================
+    // Matrix reading functionality
+    //============================================================================
+    
+    // Reading a matrix written in a binary format
+    void ReadMatBin(std::ifstream& stream, cv::Mat &output_mat);
+    
+    // Reading in a matrix from a stream
+    void ReadMat(std::ifstream& stream, cv::Mat& output_matrix);
+    
+    // Skipping comments (lines starting with # symbol)
+    void SkipComments(std::ifstream& stream);
+    
 }
 #endif
 

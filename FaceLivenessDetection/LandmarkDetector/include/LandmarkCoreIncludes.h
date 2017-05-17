@@ -10,4 +10,7 @@
 #include "LandmarkDetectorParameters.h"
 #include "LandmarkDetectorUtils.h"
 
+//seetaFace includes
+#include "face_detection.h"
+
 #endif

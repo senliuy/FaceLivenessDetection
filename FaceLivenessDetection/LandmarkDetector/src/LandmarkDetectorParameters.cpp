@@ -88,10 +88,10 @@ void FaceModelParameters::init()
     validate_detections = true;
     
     // Using hierarchical refinement by default (can be turned off)
-    refine_hierarchical = true;
+    refine_hierarchical = false;
     
     // Refining parameters by default
-    refine_parameters = true;
+    refine_parameters = false;
     
     window_sizes_small = std::vector<int>(4);
     window_sizes_init = std::vector<int>(4);
@@ -110,13 +110,13 @@ void FaceModelParameters::init()
     
     face_template_scale = 0.3;
     // Off by default (as it might lead to some slight inaccuracies in slowly moving faces)
-    use_face_template = false;
+    use_face_template = true;
     
     // For first frame use the initialisation
     window_sizes_current = window_sizes_init;
     
     model_location = std::string("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/model/main_clnf_general.txt");
-//    std::cout << "model_location = " << model_location << std::endl;
+    //    std::cout << "model_location = " << model_location << std::endl;
     
     sigma = 1.5;
     reg_factor = 25;
@@ -132,14 +132,21 @@ void FaceModelParameters::init()
     // Face detection
     
     face_detector_location = std::string("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/classifiers/haarcascade_frontalface_alt.xml");
-//    std::cout << "face_detector_location = " << face_detector_location << std::endl;
+    //    std::cout << "face_detector_location = " << face_detector_location << std::endl;
+    
+    seetaface_detector_location = std::string("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/model/seeta_fd_frontal_v1.0.bin");
     
     quiet_mode = false;
     
     // By default use HOG SVM
-    curr_face_detector = HAAR_DETECTOR; //HOG_SVM_DETECTOR;
+    curr_face_detector = SEETAFACE_DETECTOR; //HOG_SVM_DETECTOR;
     
     // The gaze tracking has to be explicitly initialised
-    track_gaze = true;
+    track_gaze = false;
+    
+    face_x_pos = 0;
+    face_y_pos = 0;
+    face_width = 0;
+    face_height = 0;
 }
 

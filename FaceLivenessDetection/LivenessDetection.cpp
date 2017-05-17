@@ -9,18 +9,11 @@
 // ************************************************/
 //
 
-
 #include "LandmarkCoreIncludes.h"
-//#include "GazeEstimation.h"
+#include "LivenessDetection.hpp"
 
 #include <fstream>
 #include <sstream>
-
-// OpenCV includes
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include "opencv2/opencv.hpp"
-
 
 #define INFO_STREAM( stream ) \
 std::cout << stream << std::endl
@@ -31,12 +24,11 @@ std::cout << "Warning: " << stream << std::endl
 #define ERROR_STREAM( stream ) \
 std::cout << "Error: " << stream << std::endl
 
-#define THRESHOLD_ORIENTATION 0.6
-#define THRESHOLD_MOUSE 2.5
-#define THRESHOLD_MOVE 17
-#define THRESHOLD_EYE 0.2
-#define THRESHOLD_FACE 200
-#define ORIENTATION_FRAME_NUM 20
+#define THRESHOLD_ORIENTATION 0.6   //[0, 1], 面部中心到左右眼角的距离比， 越小越严
+#define THRESHOLD_MOUSE 2.5         //[0, 无穷]， 嘴部面积的变化长宽比，越大越严
+#define THRESHOLD_MOVE 17           //[0, 无穷]， 20帧算法的输出总和，越小越严
+#define THRESHOLD_EYE 0.7           //[0，1】, 眼睛特征点变化的方差的比例， 越大越严
+#define ORIENTATION_FRAME_NUM 20    //转头搜集的帧数
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
@@ -63,70 +55,40 @@ vector<string> get_arguments(int argc, char **argv){
 double fps_tracker = -1.0;
 int64 t0 = 0;
 
-
 void drawFaceOutline(Mat &temp);
 bool correctFacePosition(std::vector<Point2f> landmark);
-//void landmarkExtraction(full_object_detection shape, std::vector<Point2f>& landmarks);
-//Rect dlibRectangleToOpenCV(dlib::rectangle r);
-//dlib::rectangle openCVRectToDlib(cv::Rect r);
 Mat extractFaceMatrix(Mat temp, Rect result);
 bool isRealFace(std::vector<float> closedMouse, std::vector<float> openedMouse);
 float calculateUorV(Mat flow, int m_left, int m_right, int n_left, int n_right, int dim);
 float opticalDifference(Mat flow);
-bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<float> &closedMouse, std::vector<float> &openedMouse,
-                       int &numofClosedMouses, int &numofOpenedMouses);
+bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<float> &closedMouse, std::vector<float> &openedMouse, int &numofClosedMouses, int &numofOpenedMouses,  Mat &mouseIdenImg);
 bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNum, float &sumOriValue,
-                             bool &front_face, bool &left_face, bool &right_face);
+                             bool &left_face, bool &right_face);
 bool moveIdentificate(Mat temp, std::vector<Point2f> landmark, Mat &gray, Mat &preGray, Mat &flow,
-                      int &optFlowPicNumber, std::vector<float> &optFlowDiffArray);
-bool eyeIdentificate(bool detection_success, bool clnf_eye_model, std::vector<Point2f> landmarks, std::vector<std::vector<double>> &direction, int frame_count, bool &first_iden);
+                      int &optFlowPicNumber, std::vector<float> &optFlowDiffArray, Mat &moveIdenImg);
+bool eyeIdentificate(Mat temp, bool detection_success, bool clnf_eye_model, std::vector<Point2f> landmarks, std::vector<std::vector<double>> &direction, int frame_count, bool &first_iden, Mat &eyeIdenImg);
 void openFace2dlib_landmarks(std::vector<Point2f> &dlib_landmarks, std::vector<double> openface_landmarks);
 double arrayDeviance(std::vector<double> arr);
+void relativeLandmarks(const vector<Point2f> inputLandmarks, vector<Point2f> &outputLandmarks, LandmarkDetector::CLNF &clnf_model);
 
 int main (int argc, char **argv){
-    
     vector<string> arguments = get_arguments(argc, argv);
-    
-    // Some initial parameters that can be overriden from command line
-    vector<string> files, depth_directories, output_video_files, out_dummy;
-    
     // By default try webcam 0
     int device = 0;
     LandmarkDetector::FaceModelParameters det_parameters;
-    
     // The modules that are being used for tracking
     LandmarkDetector::CLNF clnf_model(det_parameters.model_location);
+    det_parameters.track_gaze = false;
+    double visualisation_boundary = 0.2;
     
-    // Grab camera parameters, if they are not defined (approximate values will be used)
-    float fx = 0, fy = 0, cx = 0, cy = 0;
-    // Get camera parameters
-    LandmarkDetector::get_camera_params(device, fx, fy, cx, cy, arguments);
-    
-    // If cx (optical axis centre) is undefined will use the image size/2 as an estimate
-    bool cx_undefined = false;
-    bool fx_undefined = false;
-    if (cx == 0 || cy == 0){
-        cx_undefined = true;
-    }
-    if (fx == 0 || fy == 0){
-        fx_undefined = true;
-    }
-    
-    // If multiple video files are tracked, use this to indicate if we are done
-    bool done = false;
-    int f_n = -1;
-    
-    det_parameters.track_gaze = true;
-    
-//    判断模块开关: true 表示模块验证已经通过
-    bool OrientationIdentification = false;
-    bool MouseIdentification = false;
-    bool MoveIdentification = false;
+//  判断模块开关: true 表示模块验证已经通过
+    bool MoveIdentification = true;
+    bool OrientationIdentification = true;
+    bool MouseIdentification = true;
     bool EyeIdentification = false;
     //方向
     int oriNum = 0;
     float sumOriValue = 0.0;
-    bool front_face = false;
     bool left_face = false;
     bool right_face = false;
     //嘴部
@@ -145,188 +107,150 @@ int main (int argc, char **argv){
     bool first_iden = true;
     //存储脸部信息的标准差， 左右眼x,y,z各3个(3 * 2 = 6)，脸部周围轮廓18个
     std::vector<std::vector<double> > direction(36, std::vector<double>(19));
-    while(!done){ // this is not a for loop as we might also be reading from a webcam
-        string current_file;
-        // We might specify multiple video files as arguments
-        if(files.size() > 0){
-            f_n++;
-            current_file = files[f_n];
+    
+    //保存到相册
+    bool writedImage = false;
+    bool moveWriteImage = MoveIdentification;
+    bool mouseWriteImage = MouseIdentification;
+    bool eyeWriteImage = EyeIdentification;
+    Mat moveIdenImg;
+    Mat mouseIdenImg;
+    Mat eyeIdenImg;
+    
+    // Do some grabbing
+    cv::VideoCapture video_capture;
+    
+    INFO_STREAM( "Attempting to capture from device: " << device );
+    video_capture = cv::VideoCapture( device );
+    video_capture.set(CV_CAP_PROP_FRAME_WIDTH, WIN_WIDTH);
+    video_capture.set(CV_CAP_PROP_FRAME_HEIGHT, WIN_HEIGHT);
+    // Read a first frame often empty in camera
+    
+    if (!video_capture.isOpened()){
+        FATAL_STREAM("Failed to open video source");
+        return 1;
+    }
+    else INFO_STREAM( "Device or file opened");
+    
+    cv::Mat display_image;
+    video_capture >> display_image;
+    cv::flip(display_image, display_image, 1);
+    int frame_count = 0;
+    INFO_STREAM( "Starting tracking");
+    double t_start = cvGetTickCount();
+    
+    while(!display_image.empty())
+    {
+        //if(frame_count%2 == 0) continue;
+        double t_whole = cvGetTickCount();
+        // Reading the images
+        cv::Mat_<float> depth_image;
+        cv::Mat_<uchar> grayscale_image;
+        cv::Mat captured_image = display_image.clone();
+        drawFaceOutline(display_image);
+        
+        if(captured_image.channels() == 3){
+            cv::cvtColor(captured_image, grayscale_image, CV_BGR2GRAY);
+        }else{
+            grayscale_image = captured_image.clone();
         }
-        else{
-            // If we want to write out from webcam
-            f_n = 0;
-        }
+        // The actual facial landmark detection / tracking
+        bool detection_success = LandmarkDetector::DetectLandmarksInVideo(grayscale_image, depth_image, clnf_model, det_parameters);
         
-        // Do some grabbing
-        cv::VideoCapture video_capture;
-        
-        INFO_STREAM( "Attempting to capture from device: " << device );
-        video_capture = cv::VideoCapture( device );
-        video_capture.set(CV_CAP_PROP_FRAME_WIDTH, WIN_WIDTH);
-        video_capture.set(CV_CAP_PROP_FRAME_HEIGHT, WIN_HEIGHT);
-        // Read a first frame often empty in camera
-        
-        if (!video_capture.isOpened()){
-            FATAL_STREAM("Failed to open video source");
-            return 1;
-        }
-        else INFO_STREAM( "Device or file opened");
-        
-        cv::Mat captured_image;
-        video_capture >> captured_image;
-        
-        // If optical centers are not defined just use center of image
-        if (cx_undefined){
-            cx = captured_image.cols / 2.0f;
-            cy = captured_image.rows / 2.0f;
-        }
-        // Use a rough guess-timate of focal length
-        if (fx_undefined){
-            fx = 500 * (captured_image.cols / WIN_WIDTH);
-            fy = 500 * (captured_image.rows / WIN_HEIGHT);
-            fx = (fx + fy) / 2.0;
-            fy = fx;
-        }
-        
-        int frame_count = 0;
-        
-        INFO_STREAM( "Starting tracking");
-        while(!captured_image.empty())
-        {
-            // Reading the images
-            cv::Mat_<float> depth_image;
-            cv::Mat_<uchar> grayscale_image;
-            
-            if(captured_image.channels() == 3){
-                cv::cvtColor(captured_image, grayscale_image, CV_BGR2GRAY);
-            }
-            else{
-                grayscale_image = captured_image.clone();
-            }
-            // The actual facial landmark detection / tracking
-            bool detection_success = LandmarkDetector::DetectLandmarksInVideo(grayscale_image, depth_image, clnf_model, det_parameters);
-            
-            // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
-            double detection_certainty = clnf_model.detection_certainty;
-            
-
-            double visualisation_boundary = 0.2;
-            
-            // Only draw if the reliability is reasonable, the value is slightly ad-hoc
-            if (detection_certainty < visualisation_boundary){
-                LandmarkDetector::Draw(captured_image, clnf_model);
-                
-                double vis_certainty = detection_certainty;
-                if (vis_certainty > 1)
-                    vis_certainty = 1;
-                if (vis_certainty < -1)
-                    vis_certainty = -1;
-            }
-            
-            // Work out the framerate
-            if (frame_count % 10 == 0){
-                double t1 = cv::getTickCount();
-                fps_tracker = 10.0 / (double(t1 - t0) / cv::getTickFrequency());
-                t0 = t1;
-            }
-            
-            std::vector<double> openface_landmarks = clnf_model.detected_landmarks;
-            std::vector<cv::Point2f> landmarks;
-            openFace2dlib_landmarks(landmarks, openface_landmarks);
-            
-            if(!correctFacePosition(landmarks)){
-                cv::putText(captured_image, "Putting your face in the middle", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-            }else{
-            
-                //STEP1: 转向验证
-            
-                if(!OrientationIdentification && !MouseIdentification && !MoveIdentification && !EyeIdentification){
-                    cv::putText(captured_image, "STEP1 Identificating... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                    OrientationIdentification = orientationIdentificate(captured_image, landmarks, oriNum, sumOriValue, front_face, left_face, right_face);
-                }
-            
-                //STEP2: 张闭嘴验证
-                if(OrientationIdentification && !MouseIdentification && !MoveIdentification && !EyeIdentification){
-                    cv::putText(captured_image, "STEP2 Identificating... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                    MouseIdentification = mouseIdentificate(captured_image, landmarks, closedMouse, openedMouse, numofClosedMouses, numofOpenedMouses);
-                }
-                
-                //STE3: 运动光流验证
-                if(OrientationIdentification && MouseIdentification && !MoveIdentification && !EyeIdentification){
-                    cv::putText(captured_image, "STEP3 Identificating (Don't Move)... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                    MoveIdentification = moveIdentificate(captured_image, landmarks, gray, preGray, flow, optFlowPicNumber, optFlowDiffArray);
-                }
-            
-                //STEP4: 眨眼认证
-                if (OrientationIdentification && MouseIdentification && MoveIdentification && !EyeIdentification){
-                    cv::putText(captured_image, "STEP4 Identificating (Blink Eyes)... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                    bool clnf_eye_model = clnf_model.eye_model;
-                    EyeIdentification = eyeIdentificate(detection_success, clnf_eye_model, landmarks, direction, frame_count, first_iden);
-                    if(EyeIdentification){
-                        cv::putText(captured_image, "STEP4 Passed", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                    }
-                    else{
-                        cv::putText(captured_image, "Blink Eyes", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
-                    }
-                }
-                
-            }
-            //验证通过
-            if(OrientationIdentification && MouseIdentification && MoveIdentification && EyeIdentification){
-                cv::putText(captured_image, "Passed!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-            }
-            
-            
-            // Write out the framerate on the image before displaying it
-            char fpsC[255];
-            std::sprintf(fpsC, "%d", (int)fps_tracker);
-            string fpsSt("FPS:");
-            fpsSt += fpsC;
-            cv::putText(captured_image, fpsSt, cv::Point(560, 20), CV_FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0));
-            
-            if (!det_parameters.quiet_mode){
-                cv::namedWindow("tracking_result", 1);
-                cv::imshow("tracking_result", captured_image);
-                
-//                if (!depth_image.empty()){
-//                    // Division needed for visualisation purposes
-//                    imshow("depth", depth_image / 2000.0);
-//                }
-            }
-            
-            video_capture >> captured_image;
-            // detect key presses
-            char character_press = cv::waitKey(1);
-            
-            // restart the tracker
-            if(character_press == 'r'){
-                clnf_model.Reset();
-            }
-            // quit the application
-            else if(character_press=='q'){
-                return(0);
-            }
-            
-            // Update the frame count
-            frame_count++;
-            
-        }//end while(!captured_image.empty())
-        
-        frame_count = 0;
-        
-        // Reset the model, for the next video
-        clnf_model.Reset();
-        
-        // break out of the loop if done with all the files (or using a webcam)
-        if(f_n == files.size() -1 || files.empty()){
-            done = true;
+        // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
+        double detection_certainty = clnf_model.detection_certainty;
+        // Only draw if the reliability is reasonable, the value is slightly ad-hoc
+        if (detection_certainty < visualisation_boundary){
+            LandmarkDetector::Draw(display_image, clnf_model);
         }
         
-    } //end while(done)
+        std::vector<double> openface_landmarks = clnf_model.detected_landmarks;
+        std::vector<cv::Point2f> landmarks;
+        openFace2dlib_landmarks(landmarks, openface_landmarks);
+        if(!clnf_model.detection_success){
+            cv::putText(display_image, "Putting your face in the middle", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+        }else{
+        
+            //STEP 1.1: 光流
+            if(!OrientationIdentification && !MouseIdentification && !MoveIdentification && !EyeIdentification){
+                cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                cv::putText(display_image, "Stare at your phone and don't move", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                MoveIdentification = moveIdentificate(captured_image, landmarks, gray, preGray, flow, optFlowPicNumber, optFlowDiffArray, moveIdenImg);
+            }
+            //STEP 1.2: 转向
+            if(!OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
+                cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                OrientationIdentification = orientationIdentificate(display_image, landmarks, oriNum, sumOriValue, left_face, right_face);
+            }
+            
+            //STEP2: 张闭嘴验证
+            if(OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
+                cv::putText(display_image, "STEP2 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                cv::putText(display_image, "Move Your Mouse", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                MouseIdentification = mouseIdentificate(captured_image, landmarks, closedMouse, openedMouse, numofClosedMouses, numofOpenedMouses,  mouseIdenImg);
+            }
+            
+            //STEP4: 眨眼认证
+            if (OrientationIdentification && MouseIdentification && MoveIdentification && !EyeIdentification){
+                cv::Mat face = clnf_model.face_template;
+                cv::putText(display_image, "STEP3 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                cv::putText(display_image, "Blink Eyes", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                vector<cv::Point2f> relative_landmarks = landmarks;
+                relativeLandmarks(landmarks, relative_landmarks, clnf_model);
+                bool clnf_eye_model = clnf_model.eye_model;
+                EyeIdentification = eyeIdentificate(captured_image, detection_success, clnf_eye_model, landmarks, direction, frame_count, first_iden, eyeIdenImg);
+                //EyeIdentification = eyeIdentificate2(clnf_model, landmarks);
+            }
+            
+        }
+        //验证通过, 保存各步骤验证人脸, 输出结果
+        if(OrientationIdentification && MouseIdentification && MoveIdentification && EyeIdentification){
+            cv::putText(display_image, "Passed!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+            if(!writedImage){
+                double t_end = cvGetTickCount();
+                cout<<"Time Consuming: "<<(t_end - t_start)/(double)cvGetTickFrequency()/1000000<<"s"<<endl;
+                cout<<"Frame Used: "<<frame_count<<endl;
+                std::cout<<"Detection Succeed, Wrting Photos"<<std::endl;
+                if(!moveWriteImage)   cv::imwrite("movePic.jpg", moveIdenImg);
+                if(!mouseWriteImage)  cv::imwrite("mousePic.jpg", mouseIdenImg);
+                if(!eyeWriteImage) cv::imwrite("eyePic.jpg", eyeIdenImg);
+                writedImage = true;
+            }
+        }
+        
+        if (!det_parameters.quiet_mode){
+            cv::namedWindow("tracking_result");
+            cv::imshow("tracking_result", display_image);
+            
+            cv::namedWindow("face_result");
+            cv::imshow("face_result", clnf_model.face_template);
+        }
+        
+        video_capture >> display_image;
+        cv::flip(display_image, display_image, 1);
+        // detect key presses
+        char character_press = cv::waitKey(1);
+        
+        // restart the tracker
+        if(character_press == 'r'){
+            clnf_model.Reset();
+        }
+        // quit the application
+        else if(character_press=='q'){
+            return(0);
+        }
+        // Update the frame count
+        frame_count++;
+        t_whole = ((double)cvGetTickCount() - t_whole) / cvGetTickFrequency() / 1000;
+        cout<<"Frame Processing Time: "<<t_whole<<endl;
+        
+    }//end while(!captured_image.empty())
+    frame_count = 0;
+    // Reset the model, for the next video
+    clnf_model.Reset();
     
     return 0;
 }
-
 
 void drawFaceOutline(Mat &temp){
     cv::Size sz(200,300);
@@ -338,17 +262,6 @@ void drawFaceOutline(Mat &temp){
     cv::ellipse(temp, Point2f(WIN_WIDTH/2, WIN_HEIGHT/2), sz, 0, -20, 20, cv::Scalar(255,255,255), 4);
     cv::ellipse(temp, Point2f(WIN_WIDTH/2, WIN_HEIGHT/2), sz, 0, 160, 200, cv::Scalar(255,255,255), 4);
 }
-
-
-//// opencv Rect 转 dlib rectangle
-//dlib::rectangle openCVRectToDlib(cv::Rect r){
-//    return dlib::rectangle((long)r.tl().x, (long)r.tl().y, (long)r.br().x - 1, (long)r.br().y - 1);
-//}
-//
-//// dlib rectangle 转 opencv Rect
-//Rect dlibRectangleToOpenCV(dlib::rectangle r){
-//    return cv::Rect(Point2i(r.left(), r.top()), Point2i(r.right() + 1, r.bottom() + 1) );
-//}
 
 //提取脸部矩阵
 Mat extractFaceMatrix(Mat temp, Rect result){
@@ -387,46 +300,46 @@ bool correctFacePosition(std::vector<Point2f> landmark){
 }
 
 //检测用户是否按指令摇头
-bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNum, float &sumOriValue,
-                             bool &front_face, bool &left_face, bool &right_face){
+bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNum,
+                             float &sumOriValue, bool &left_face, bool &right_face){
     Point2f point_nose = landmark[33];
     Point2f point_left_eye = landmark[36];
     Point2f point_right_eye = landmark[45];
-
-
+    
+    
     float left_temp_x = (point_nose.x - point_left_eye.x) * (point_nose.x - point_left_eye.x);
     float left_temp_y = (point_nose.y - point_left_eye.y) * (point_nose.y - point_left_eye.y);
-
+    
     float right_temp_x = (point_nose.x - point_right_eye.x) * (point_nose.x - point_right_eye.x);
     float right_temp_y = (point_nose.y - point_right_eye.y) * (point_nose.y - point_right_eye.y);
-
+    
     float oriVal = (left_temp_x + left_temp_y) / (right_temp_x + right_temp_y);
-
-
+    
+    
     if(oriNum < ORIENTATION_FRAME_NUM){
-        if(!front_face && !left_face && !right_face){
-            cv::putText(temp, "FRONT", Point2f(WIN_WIDTH/3, WIN_HEIGHT/2), FONT_HERSHEY_PLAIN, 3, cv::Scalar(0,0,255));
-        }else if(front_face && !left_face && !right_face){
-            cv::putText(temp, "LEFT", Point2f(WIN_WIDTH/3, WIN_HEIGHT/2), FONT_HERSHEY_PLAIN, 3, cv::Scalar(0,0,255));
-        }else if(front_face && left_face && !right_face){
-            cv::putText(temp, "RIGHT", Point2f(WIN_WIDTH/3, WIN_HEIGHT/2), FONT_HERSHEY_PLAIN, 3, cv::Scalar(0,0,255));
+        if(!left_face && !right_face){
+            cv::putText(temp, "Turn Your Head to Right", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+        }else if(left_face && !right_face){
+            cv::putText(temp, "Turn Your Head to Left", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
         }else{
             cv::putText(temp, "STEP1 Passed!!!", Point2f(WIN_WIDTH*3/4, WIN_HEIGHT/2), FONT_HERSHEY_PLAIN, 3, cv::Scalar(0,0,255));
         }
         oriNum++;
         sumOriValue += oriVal;
     }else{
-        if(sumOriValue/oriNum >= THRESHOLD_ORIENTATION && sumOriValue/oriNum <= 1/THRESHOLD_ORIENTATION){
-            if(!front_face && !left_face && !right_face) front_face = true;
-        }else if(sumOriValue/oriNum > THRESHOLD_ORIENTATION){
-            if(front_face && !left_face && !right_face) left_face = true;
-        }else{
-            if(front_face && left_face && !right_face) right_face = true;
+        
+        double res = sumOriValue/oriNum;
+        cout<<"Orientation output value "<<res<<endl;
+        if(res > 1/THRESHOLD_ORIENTATION ){
+            if(!left_face && !right_face) left_face = true;
+        }
+        if(res < THRESHOLD_ORIENTATION ){
+            if(left_face && !right_face) right_face = true;
         }
         oriNum = 0;
         sumOriValue = 0.0;
     }
-    return front_face && left_face && right_face;
+    return left_face && right_face;
 }
 
 
@@ -436,27 +349,27 @@ bool isRealFace(std::vector<float> closedMouse, std::vector<float> openedMouse){
     auto smallestOpened = std::min_element(openedMouse.begin(), openedMouse.end());
     cout<<"Biggest Mouse: "<<*biggestClosed<<endl;
     cout<<"Smallest Mouse: "<<*smallestOpened<<endl;
+    cout<<"Value of Mouse Identification: "<<(*smallestOpened / *biggestClosed)<<endl;
     return (*smallestOpened / *biggestClosed) > THRESHOLD_MOUSE;
 }
 
 //通过嘴部的面积变化验证是否为真实人脸
-bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<float> &closedMouse, std::vector<float> &openedMouse,
-                       int &numofClosedMouses, int &numofOpenedMouses){
+bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<float> &closedMouse, std::vector<float> &openedMouse, int &numofClosedMouses, int &numofOpenedMouses, Mat &mouseIdenImg){
     bool isReal = false;
     std::vector<Point2f> mouseArea;
     for(int i = 48; i <= 60; i++){
         Point2f point = landmark[i];
         mouseArea.push_back(point);
     }
-
+    
     int mouseSize = contourArea(mouseArea);
     float mouseLength = landmark[54].x - landmark[48].x;
     float mouseRatio = mouseSize/(mouseLength*mouseLength);
-
+    
     //判断是否为真实人脸
     auto biggestClosed = std::max_element(closedMouse.begin(), closedMouse.end());
     auto smallestOpened = std::min_element(openedMouse.begin(), openedMouse.end());
-
+    
     if(mouseRatio < *biggestClosed){
         int biggestIndex = (int)std::distance(closedMouse.begin(), biggestClosed);
         closedMouse[biggestIndex] = mouseRatio;
@@ -469,15 +382,11 @@ bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<flo
     }
     if(numofClosedMouses >= 5 && numofOpenedMouses >=5){
         isReal = isRealFace(closedMouse, openedMouse);
-        if(isReal == true){
-            cv::putText(temp, "STEP1 Passed", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-        }
-        else{
-            cv::putText(temp, "Move Your Mouse", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
-        }
-    }else   cv::putText(temp, "Collecting Faces...", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(255,0,0));
+    }
+    mouseIdenImg = temp;
     return isReal;
 }
+
 
 // 计算光流
 // 算法出自论文: <<A Liveness Detection Method for Face Recognition Based on Optical Flow Field>>
@@ -525,7 +434,7 @@ float opticalDifference(Mat flow){
         }
     }
     optDifference = numeratorofD/denominatorofD;
-
+    
     return optDifference;
 }
 
@@ -547,21 +456,23 @@ float calculateUorV(Mat flow, int m_left, int m_right, int n_left, int n_right, 
     return UorV;
 }
 
-bool moveIdentificate(Mat temp, std::vector<Point2f> landmark, Mat &gray, Mat &preGray, Mat &flow, int &optFlowPicNumber, std::vector<float> &optFlowDiffArray){
+bool moveIdentificate(Mat temp, std::vector<Point2f> landmark, Mat &gray, Mat &preGray, Mat &flow, int &optFlowPicNumber, std::vector<float> &optFlowDiffArray,  Mat &moveIdenImg){
     //光流部分流程
     //计算光流部分的差值
     Point2f face_center = landmark[28];
-    //Mat faceArea = temp(Range(WIN_WIDTH/4, WIN_WIDTH*3/4),  Range(WIN_HEIGHT/4, WIN_HEIGHT*3/4));
-    if ( (face_center.y - WIN_HEIGHT/4) >= 0 && (face_center.y + WIN_HEIGHT/4) <= WIN_HEIGHT &&
-        (face_center.x - WIN_WIDTH/4) >= 0  && (face_center.x + WIN_WIDTH/4) <= WIN_WIDTH ){
-        Mat faceArea = temp(Range(face_center.y - WIN_HEIGHT/4, face_center.y + WIN_HEIGHT*1/4),
-                        Range(face_center.x - WIN_WIDTH/4, face_center.x + WIN_WIDTH*1/4));
-        //Mat faceArea = temp(Range(169, 459), Range(79, 319));
+    if ( (face_center.y - WIN_HEIGHT/4) > 0 && (face_center.y + WIN_HEIGHT/4) < WIN_HEIGHT &&
+        (face_center.x - WIN_WIDTH/4) > 0  && (face_center.x + WIN_WIDTH/4) < WIN_WIDTH ){
+        Mat faceArea = temp(Range(face_center.y - WIN_HEIGHT/6, face_center.y + WIN_HEIGHT/6),
+                            Range(face_center.x - WIN_WIDTH/6, face_center.x + WIN_WIDTH/6) );
         cvtColor(faceArea, gray, CV_BGR2GRAY);
         if(preGray.data){
             calcOpticalFlowFarneback(preGray, gray, flow, 0.5, 3, 15, 3, 5, 1.2, 0);
             float optDifference = opticalDifference(flow);
             optFlowDiffArray[optFlowPicNumber%20] = optDifference;
+            //保存图像用于人脸识别
+            if(optFlowPicNumber%10 == 0){
+                moveIdenImg = temp;
+            }
             optFlowPicNumber++;
         }
         std::swap(preGray, gray);
@@ -570,15 +481,10 @@ bool moveIdentificate(Mat temp, std::vector<Point2f> landmark, Mat &gray, Mat &p
             for(auto iter = optFlowDiffArray.begin(); iter != optFlowDiffArray.end(); iter++){
                 sumDif += *iter;
             }
-            cout<<"sumDif"<<sumDif<<endl;
-            if(sumDif < THRESHOLD_MOVE && sumDif > 0){
-                cv::putText(temp, "STEP3 Passed", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                return true;
-            }
-            else
-                cv::putText(temp, "STEP3 NOT Passed", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+            
+            cout<<"Value of Move Identification: "<<sumDif<<endl;
+            if(sumDif < THRESHOLD_MOVE && sumDif > 0)   return true;
         }
-        //cout<<sumDif<<endl;
     }
     return false;
 }
@@ -609,28 +515,23 @@ double arrayDeviance(std::vector<double> arr){
 }
 
 //眨眼验证
-bool eyeIdentificate(bool detection_success, bool clnf_eye_model, std::vector<Point2f> landmarks, std::vector<std::vector<double>> &direction, int frame_count, bool &first_iden){
-    
-    //cout<<"frame_count"<<frame_count<<endl;
-    if (detection_success /*&& clnf_eye_model*/){
+bool eyeIdentificate(Mat temp, bool detection_success, bool clnf_eye_model, std::vector<Point2f> landmarks, std::vector<std::vector<double>> &direction, int frame_count, bool &first_iden, Mat &eyeIdenImg){
+    if (detection_success){
         if(frame_count%20 == 0){
             std::vector<double> deviance_vec(36,0.0);
             for(int i = 0; i < 36; i++){
                 deviance_vec[i] = arrayDeviance(direction[i]);
-                //                cout<<"deviance "<<i<<": "<<deviance_vec[i]<<endl;
             }
             double deviance_eye = 0.0;
             double deviance_face = 0.0;
             for(int i = 1; i < 12; i++){ deviance_eye += deviance_vec[i];}
             for(int i = 12; i < 36; i++){ deviance_face += deviance_vec[i];}
-            cout<<"deviance_eye: "<<deviance_eye<<endl;
-            cout<<"deviance_face: "<<deviance_face<<endl;
             if(first_iden){
                 first_iden = false;
                 return false;
             }else{
-                return deviance_eye/deviance_face > 0.7;
-                //                return deviance_eye > THRESHOLD_EYE && deviance_face < THRESHOLD_FACE;
+                cout<<"Value of Eye Identification: "<<deviance_eye/deviance_face<<endl;
+                return deviance_eye/deviance_face > THRESHOLD_EYE;
             }
             
         }else{
@@ -641,10 +542,20 @@ bool eyeIdentificate(bool detection_success, bool clnf_eye_model, std::vector<Po
                     direction[i][frame_count%20 - 1] = landmarks[i-12].x + landmarks[i-12].y;
                 }
             }
-            //cout<<gazeDirection0.x<<endl;
         }
     }
+    eyeIdenImg = temp;
     return false;
 }
 
-
+//眨眼验证
+void relativeLandmarks(const vector<Point2f> inputLandmarks, vector<Point2f> &outputLandmarks, LandmarkDetector::CLNF &clnf_model){
+    float relative_x = clnf_model.face_x_pos;
+    float relative_y = clnf_model.face_y_pos;
+    float relative_width = clnf_model.face_width;
+    float relative_height = clnf_model.face_height;
+    for( int i=0; i<inputLandmarks.size(); i++){
+        outputLandmarks[i].x = (inputLandmarks[i].x - relative_x) / relative_width;
+        outputLandmarks[i].y = (inputLandmarks[i].y - relative_y) / relative_height;
+    }
+}
