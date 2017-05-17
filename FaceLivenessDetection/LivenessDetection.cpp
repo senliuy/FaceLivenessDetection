@@ -55,7 +55,7 @@ vector<string> get_arguments(int argc, char **argv){
 double fps_tracker = -1.0;
 int64 t0 = 0;
 
-void drawFaceOutline(Mat &temp);
+void drawFaceOutline(Mat &display_image, Mat mask, Mat logo);
 bool correctFacePosition(std::vector<Point2f> landmark);
 Mat extractFaceMatrix(Mat temp, Rect result);
 bool isRealFace(std::vector<float> closedMouse, std::vector<float> openedMouse);
@@ -138,16 +138,19 @@ int main (int argc, char **argv){
     int frame_count = 0;
     INFO_STREAM( "Starting tracking");
     double t_start = cvGetTickCount();
-    
+    Mat logo = imread("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/pic/faceOutline.jpg");
+    Mat mask = imread("/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/pic/faceOutline.jpg",0); //注意要是灰度图才行
     while(!display_image.empty())
     {
+        cv::flip(display_image, display_image, 1);
+        
         //if(frame_count%2 == 0) continue;
         double t_whole = cvGetTickCount();
         // Reading the images
         cv::Mat_<float> depth_image;
         cv::Mat_<uchar> grayscale_image;
         cv::Mat captured_image = display_image.clone();
-        drawFaceOutline(display_image);
+        drawFaceOutline(display_image, mask, logo);
         
         if(captured_image.channels() == 3){
             cv::cvtColor(captured_image, grayscale_image, CV_BGR2GRAY);
@@ -221,13 +224,11 @@ int main (int argc, char **argv){
         if (!det_parameters.quiet_mode){
             cv::namedWindow("tracking_result");
             cv::imshow("tracking_result", display_image);
-            
-            cv::namedWindow("face_result");
-            cv::imshow("face_result", clnf_model.face_template);
         }
         
         video_capture >> display_image;
-        cv::flip(display_image, display_image, 1);
+        
+        
         // detect key presses
         char character_press = cv::waitKey(1);
         
@@ -252,15 +253,15 @@ int main (int argc, char **argv){
     return 0;
 }
 
-void drawFaceOutline(Mat &temp){
-    cv::Size sz(200,300);
-    cv::Scalar color(255,255,255);
-    cv::line(temp, Point2f(WIN_WIDTH/2, WIN_HEIGHT/2-40), Point2f(WIN_WIDTH/2, WIN_HEIGHT/2+50), color, 4);
-    cv::line(temp, Point2f(WIN_WIDTH/2-55, WIN_HEIGHT/2-80),Point2f(WIN_WIDTH/2-115, WIN_HEIGHT/2-80), color, 4);
-    cv::line(temp, Point2f(WIN_WIDTH/2+55, WIN_HEIGHT/2-80),Point2f(WIN_WIDTH/2+115, WIN_HEIGHT/2-80), color, 4);
-    cv::line(temp, Point2f(WIN_WIDTH/2-40, WIN_HEIGHT/2+120),Point2f(WIN_WIDTH/2+40, WIN_HEIGHT/2+120), color, 4);
-    cv::ellipse(temp, Point2f(WIN_WIDTH/2, WIN_HEIGHT/2), sz, 0, -20, 20, cv::Scalar(255,255,255), 4);
-    cv::ellipse(temp, Point2f(WIN_WIDTH/2, WIN_HEIGHT/2), sz, 0, 160, 200, cv::Scalar(255,255,255), 4);
+void drawFaceOutline(Mat &display_image, Mat mask, Mat logo){
+    cv::Mat display_image_clone = display_image.clone();
+    float alpha = 0.5;
+    float beta = 1-alpha;
+    threshold(mask,mask,245,255,CV_THRESH_BINARY);
+    cv::Mat imageROI;
+    imageROI = display_image(cv::Rect(0,0,logo.cols,logo.rows));
+    logo.copyTo(imageROI,mask);
+    addWeighted( display_image, alpha, display_image_clone, beta, 0.0,display_image);
 }
 
 //提取脸部矩阵

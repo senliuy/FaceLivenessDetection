@@ -92,6 +92,7 @@
 		4CA4999A1ECAEBA8005D1368 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../usr/local/Cellar/freetype/2.7.1/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		4CF61DEC1EC55B2E00B75E1F /* LivenessDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LivenessDetection.cpp; path = LivenessDetection/LivenessDetection.cpp; sourceTree = "<group>"; };
 		4CF61DED1EC55B2E00B75E1F /* LivenessDetection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LivenessDetection.hpp; path = LivenessDetection/LivenessDetection.hpp; sourceTree = "<group>"; };
+		4CFEDDDF1ECC2AF800FB1348 /* faceOutline.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = faceOutline.jpg; path = FaceLivenessDetection/pic/faceOutline.jpg; sourceTree = "<group>"; };
 		4CFF5ED61EBAFB75002F4DA8 /* FaceLivenessDetection */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FaceLivenessDetection; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CFF5EE01EBAFC3E002F4DA8 /* LivenessDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LivenessDetection.cpp; sourceTree = "<group>"; };
 		4CFF5F4E1EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CCNF_patch_expert.cpp; path = LandmarkDetector/src/CCNF_patch_expert.cpp; sourceTree = "<group>"; };
@@ -276,9 +277,18 @@
 			name = LivenessDetection;
 			sourceTree = "<group>";
 		};
+		4CFEDDDE1ECC2A9D00FB1348 /* pic */ = {
+			isa = PBXGroup;
+			children = (
+				4CFEDDDF1ECC2AF800FB1348 /* faceOutline.jpg */,
+			);
+			name = pic;
+			sourceTree = "<group>";
+		};
 		4CFF5ECD1EBAFB75002F4DA8 = {
 			isa = PBXGroup;
 			children = (
+				4CFEDDDE1ECC2A9D00FB1348 /* pic */,
 				4CFF5F891EBB01F4002F4DA8 /* lib */,
 				4CFF5ED81EBAFB75002F4DA8 /* FaceLivenessDetection */,
 				4CFF5ED71EBAFB75002F4DA8 /* Products */,
