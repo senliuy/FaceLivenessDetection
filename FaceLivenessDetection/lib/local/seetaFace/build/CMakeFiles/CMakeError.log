@@ -1,0 +1,454 @@
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_faab0/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_faab0.dir/build.make CMakeFiles/cmTC_faab0.dir/build
+Building C object CMakeFiles/cmTC_faab0.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED   -o CMakeFiles/cmTC_faab0.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c:2:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_faab0.dir/src.c.o] Error 1
+make: *** [cmTC_faab0/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2ccb8/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_2ccb8.dir/build.make CMakeFiles/cmTC_2ccb8.dir/build
+Building C object CMakeFiles/cmTC_2ccb8.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_2ccb8.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: unsupported option '-fopenmp'
+make[1]: *** [CMakeFiles/cmTC_2ccb8.dir/src.c.o] Error 1
+make: *** [cmTC_2ccb8/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_86530/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_86530.dir/build.make CMakeFiles/cmTC_86530.dir/build
+Building C object CMakeFiles/cmTC_86530.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -fopenmp=libomp   -o CMakeFiles/cmTC_86530.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: unsupported argument 'libomp' to option 'fopenmp='
+make[1]: *** [CMakeFiles/cmTC_86530.dir/src.c.o] Error 1
+make: *** [cmTC_86530/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7e1d7/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_7e1d7.dir/build.make CMakeFiles/cmTC_7e1d7.dir/build
+Building C object CMakeFiles/cmTC_7e1d7.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED /openmp   -o CMakeFiles/cmTC_7e1d7.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: no such file or directory: '/openmp'
+make[1]: *** [CMakeFiles/cmTC_7e1d7.dir/src.c.o] Error 1
+make: *** [cmTC_7e1d7/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_75554/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_75554.dir/build.make CMakeFiles/cmTC_75554.dir/build
+Building C object CMakeFiles/cmTC_75554.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -Qopenmp   -o CMakeFiles/cmTC_75554.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: unknown argument: '-Qopenmp'
+make[1]: *** [CMakeFiles/cmTC_75554.dir/src.c.o] Error 1
+make: *** [cmTC_75554/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_62ce5/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_62ce5.dir/build.make CMakeFiles/cmTC_62ce5.dir/build
+Building C object CMakeFiles/cmTC_62ce5.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -openmp   -o CMakeFiles/cmTC_62ce5.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c:2:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_62ce5.dir/src.c.o] Error 1
+make: *** [cmTC_62ce5/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c8300/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_c8300.dir/build.make CMakeFiles/cmTC_c8300.dir/build
+Building C object CMakeFiles/cmTC_c8300.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -xopenmp   -o CMakeFiles/cmTC_c8300.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: language not recognized: 'openmp'
+clang: warning: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c: 'linker' input unused [-Wunused-command-line-argument]
+make[1]: *** [CMakeFiles/cmTC_c8300.dir/src.c.o] Error 1
+make: *** [cmTC_c8300/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_465e8/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_465e8.dir/build.make CMakeFiles/cmTC_465e8.dir/build
+Building C object CMakeFiles/cmTC_465e8.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED +Oopenmp   -o CMakeFiles/cmTC_465e8.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: no such file or directory: '+Oopenmp'
+make[1]: *** [CMakeFiles/cmTC_465e8.dir/src.c.o] Error 1
+make: *** [cmTC_465e8/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_4d065/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_4d065.dir/build.make CMakeFiles/cmTC_4d065.dir/build
+Building C object CMakeFiles/cmTC_4d065.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -qsmp   -o CMakeFiles/cmTC_4d065.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: unknown argument: '-qsmp'
+make[1]: *** [CMakeFiles/cmTC_4d065.dir/src.c.o] Error 1
+make: *** [cmTC_4d065/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_912d6/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_912d6.dir/build.make CMakeFiles/cmTC_912d6.dir/build
+Building C object CMakeFiles/cmTC_912d6.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DOpenMP_FLAG_DETECTED -mp   -o CMakeFiles/cmTC_912d6.dir/src.c.o   -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.c
+clang: error: unknown argument: '-mp'
+make[1]: *** [CMakeFiles/cmTC_912d6.dir/src.c.o] Error 1
+make: *** [cmTC_912d6/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ee74e/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_ee74e.dir/build.make CMakeFiles/cmTC_ee74e.dir/build
+Building CXX object CMakeFiles/cmTC_ee74e.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED   -o CMakeFiles/cmTC_ee74e.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx:2:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_ee74e.dir/src.cxx.o] Error 1
+make: *** [cmTC_ee74e/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_05da9/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_05da9.dir/build.make CMakeFiles/cmTC_05da9.dir/build
+Building CXX object CMakeFiles/cmTC_05da9.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_05da9.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: unsupported option '-fopenmp'
+make[1]: *** [CMakeFiles/cmTC_05da9.dir/src.cxx.o] Error 1
+make: *** [cmTC_05da9/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5ced7/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_5ced7.dir/build.make CMakeFiles/cmTC_5ced7.dir/build
+Building CXX object CMakeFiles/cmTC_5ced7.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -fopenmp=libomp   -o CMakeFiles/cmTC_5ced7.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: unsupported argument 'libomp' to option 'fopenmp='
+make[1]: *** [CMakeFiles/cmTC_5ced7.dir/src.cxx.o] Error 1
+make: *** [cmTC_5ced7/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_578a2/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_578a2.dir/build.make CMakeFiles/cmTC_578a2.dir/build
+Building CXX object CMakeFiles/cmTC_578a2.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED /openmp   -o CMakeFiles/cmTC_578a2.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: no such file or directory: '/openmp'
+make[1]: *** [CMakeFiles/cmTC_578a2.dir/src.cxx.o] Error 1
+make: *** [cmTC_578a2/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5ab7a/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_5ab7a.dir/build.make CMakeFiles/cmTC_5ab7a.dir/build
+Building CXX object CMakeFiles/cmTC_5ab7a.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -Qopenmp   -o CMakeFiles/cmTC_5ab7a.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: unknown argument: '-Qopenmp'
+make[1]: *** [CMakeFiles/cmTC_5ab7a.dir/src.cxx.o] Error 1
+make: *** [cmTC_5ab7a/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_adc10/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_adc10.dir/build.make CMakeFiles/cmTC_adc10.dir/build
+Building CXX object CMakeFiles/cmTC_adc10.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -openmp   -o CMakeFiles/cmTC_adc10.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx:2:10: fatal error: 'omp.h' file not found
+#include <omp.h>
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_adc10.dir/src.cxx.o] Error 1
+make: *** [cmTC_adc10/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_18b96/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_18b96.dir/build.make CMakeFiles/cmTC_18b96.dir/build
+Building CXX object CMakeFiles/cmTC_18b96.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -xopenmp   -o CMakeFiles/cmTC_18b96.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: language not recognized: 'openmp'
+clang: warning: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx: 'linker' input unused [-Wunused-command-line-argument]
+make[1]: *** [CMakeFiles/cmTC_18b96.dir/src.cxx.o] Error 1
+make: *** [cmTC_18b96/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_02b66/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_02b66.dir/build.make CMakeFiles/cmTC_02b66.dir/build
+Building CXX object CMakeFiles/cmTC_02b66.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED +Oopenmp   -o CMakeFiles/cmTC_02b66.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: no such file or directory: '+Oopenmp'
+make[1]: *** [CMakeFiles/cmTC_02b66.dir/src.cxx.o] Error 1
+make: *** [cmTC_02b66/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_62af8/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_62af8.dir/build.make CMakeFiles/cmTC_62af8.dir/build
+Building CXX object CMakeFiles/cmTC_62af8.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -qsmp   -o CMakeFiles/cmTC_62af8.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: unknown argument: '-qsmp'
+make[1]: *** [CMakeFiles/cmTC_62af8.dir/src.cxx.o] Error 1
+make: *** [cmTC_62af8/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED failed with the following output:
+Change Dir: /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_87e32/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_87e32.dir/build.make CMakeFiles/cmTC_87e32.dir/build
+Building CXX object CMakeFiles/cmTC_87e32.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -O2 -msse4.1 -DOpenMP_FLAG_DETECTED -mp   -o CMakeFiles/cmTC_87e32.dir/src.cxx.o -c /Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/CMakeTmp/src.cxx
+clang: error: unknown argument: '-mp'
+make[1]: *** [CMakeFiles/cmTC_87e32.dir/src.cxx.o] Error 1
+make: *** [cmTC_87e32/fast] Error 2
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+

@@ -1,0 +1,7 @@
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/install/local.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/install/strip.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/install.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/list_install_components.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/rebuild_cache.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/edit_cache.dir
+/Users/liuyan/Desktop/FaceLivenessDetectionCmake/FaceLivenessDetection/lib/local/seetaFace/build/CMakeFiles/seetaFace.dir
