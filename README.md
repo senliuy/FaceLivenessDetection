@@ -5,7 +5,7 @@
 
 活体检测是基于下面两个开源工具。其中，OpenFace的CLNF算法用于人脸关键点匹配，SeetaFace进行更为实时的人脸检测和跟踪
 * [OpenFace](https://github.com/TadasBaltrusaitis/OpenFace)
-* SeetaFace: <https://github.com/seetaface/SeetaFaceEngine>
+* [SeetaFace](https://github.com/seetaface/SeetaFaceEngine)
 
 活体验证关卡包括：
 * 基于面部材质的光流特征
@@ -19,7 +19,7 @@
 
 ### 准备
 
-* 首先安装Homebrew:<https://brew.sh/>，homebrew是类似于Linux系统上apt-get的软件。
+* 首先安装[Homebrew](https://brew.sh)，homebrew是类似于Linux系统上apt-get的软件。
 * 安装TBB，OpenCV3（必须3及以上版本）和 boost
 
     brew install boost tbb opencv3
