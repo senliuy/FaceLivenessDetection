@@ -29,11 +29,15 @@
 在命令行执行下列指令：
 
 <code> mkdir build </code>
+
 <code> cd build </code>
+
 <code> cmake .. </code>
+
 <code> make </code>
 
 ## 测试
 
 进入到<code>build/bin</code>目录下。执行
+
 <code> ./FaceLivenessDetection </code>
