@@ -27,11 +27,11 @@
 ### Build
 
 在命令行执行下列指令：
-
+'''bash
   mkdir build
   cd build 
   cmake -D CMAKE_BUILD_TYPE=RELEASE ..
-  make
+  make'''
 
 ### 测试
 
