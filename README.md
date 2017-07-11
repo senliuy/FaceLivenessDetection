@@ -22,7 +22,7 @@
 * 首先安装Homebrew:<https://brew.sh/>，homebrew是类似于Linux系统上apt-get的软件。
 * 安装TBB，OpenCV3（必须3及以上版本）和 boost
 
-<code> brew install boost tbb opencv3 </code>
+    brew install boost tbb opencv3
 
 ### Build
 
@@ -37,7 +37,11 @@
 
 进入到<code>build/bin</code>目录下。执行
 
-<code> ./FaceLivenessDetection </code>
+    ./FaceLivenessDetection
 
 ## 功能
+
+### 基于光流
+此验证步骤，验证用户保持静止即可
+
 
