@@ -18,6 +18,22 @@
 安装仅在Mac上进行测试，其它系统安装方法类似。
 
 ## 准备
+
 * 首先安装Homebrew:<https://brew.sh/>，homebrew是类似于Linux系统上apt-get的软件。
 * 安装TBB，OpenCV3（必须3及以上版本）和 boost
+
 <code> brew install boost tbb opencv3 </code>
+
+## Build
+
+在命令行执行下列指令：
+
+<code> mkdir build </code>
+<code> cd build </code>
+<code> cmake .. </code>
+<code> make </code>
+
+## 测试
+
+进入到<code>build/bin</code>目录下。执行
+<code> ./FaceLivenessDetection </code>
