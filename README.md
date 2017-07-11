@@ -13,4 +13,8 @@
 * 基于活体的嘴部可动性特征
 * 基于活体的眼部可动性特征
 
-### Installation
+### 安装
+
+安装仅在Mac上进行测试，其它系统安装方法类似
+
+首先安装Homebrew(https://brew.sh/)，homebrew是类似于Linux系统上apt-get的软件.
