@@ -15,6 +15,9 @@
 
 ### 安装
 
-安装仅在Mac上进行测试，其它系统安装方法类似
+安装仅在Mac上进行测试，其它系统安装方法类似。
 
-首先安装Homebrew(https://brew.sh/)，homebrew是类似于Linux系统上apt-get的软件.
+##准备
+*首先安装Homebrew:<https://brew.sh/>，homebrew是类似于Linux系统上apt-get的软件。
+*安装TBB，OpenCV3（必须3及以上版本），boost
+<code> brew install boost tbb opencv3 </code>
