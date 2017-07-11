@@ -15,16 +15,16 @@
 
 ## 安装
 
-安装仅在Mac上进行测试，其它系统安装方法类似。
+### MAC
 
-### 准备
+#### 准备
 
 * 首先安装[Homebrew](https://brew.sh)，homebrew是类似于Linux系统上apt-get的软件。
 * 安装TBB，OpenCV3（必须3及以上版本）和 boost
 
     brew install boost tbb opencv3
 
-### Build
+#### Build
 
 在命令行执行下列指令：
 
@@ -33,15 +33,56 @@
     cmake -D CMAKE_BUILD_TYPE=RELEASE ..
     make
 
-### 测试
+#### 测试
 
 进入到<code>build/bin</code>目录下。执行
 
     ./FaceLivenessDetection
 
+### Ubuntu 14.0
+
+Get newest GCC, done using:
+
+    sudo apt-get update
+
+    sudo apt-get install build-essential
+
+Cmake:
+
+    sudo apt-get install cmake
+
+Get BLAS (for dlib)
+
+    sudo apt-get install libopenblas-dev liblapack-dev
+
+OpenCV 3.1.0
+
+4.1 Install OpenCV dependencies:
+
+    sudo apt-get install git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+
+    sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev checkinstall
+4.2 Download OpenCV 3.1.0 from https://github.com/Itseez/opencv/archive/3.1.0.zip
+
+    wget https://github.com/Itseez/opencv/archive/3.1.0.zip
+4.3 Unzip it and create a build folder:
+
+    sudo unzip 3.1.0.zip
+    cd opencv-3.1.0
+    mkdir build
+    cd build
+4.4 Build it using:
+
+    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_SHARED_LIBS=OFF ..
+    make -j2
+
+    sudo make install
+
+Get Boost:
+
+    sudo apt-get install libboost1.55-all-dev
+
+alternatively: 
+
+    sudo apt-get install libboost-all-dev
 ## 功能
-
-### 基于光流
-此验证步骤，验证用户保持静止即可
-
-
