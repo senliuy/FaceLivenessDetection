@@ -23,7 +23,6 @@
 		4C5060061EBC4A9A004A08B9 /* surf_mlp_model_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FF81EBC4A99004A08B9 /* surf_mlp_model_reader.cpp */; };
 		4C5060081EBC4A9A004A08B9 /* image_pyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FFC1EBC4A99004A08B9 /* image_pyramid.cpp */; };
 		4C5060091EBC4A9A004A08B9 /* nms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C505FFD1EBC4A99004A08B9 /* nms.cpp */; };
-		4CA4999B1ECAEBA8005D1368 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CA4999A1ECAEBA8005D1368 /* libfreetype.6.dylib */; };
 		4CF61DEE1EC55B2E00B75E1F /* LivenessDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CF61DEC1EC55B2E00B75E1F /* LivenessDetection.cpp */; };
 		4CFF5EE11EBAFC3E002F4DA8 /* LivenessDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF5EE01EBAFC3E002F4DA8 /* LivenessDetection.cpp */; };
 		4CFF5F591EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF5F4E1EBAFCB3002F4DA8 /* CCNF_patch_expert.cpp */; };
@@ -89,7 +88,6 @@
 		4C50601D1EBC4ABF004A08B9 /* image_pyramid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_pyramid.h; sourceTree = "<group>"; };
 		4C50601E1EBC4ABF004A08B9 /* math_func.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math_func.h; sourceTree = "<group>"; };
 		4C50601F1EBC4ABF004A08B9 /* nms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nms.h; sourceTree = "<group>"; };
-		4CA4999A1ECAEBA8005D1368 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../usr/local/Cellar/freetype/2.7.1/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		4CF61DEC1EC55B2E00B75E1F /* LivenessDetection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LivenessDetection.cpp; path = LivenessDetection/LivenessDetection.cpp; sourceTree = "<group>"; };
 		4CF61DED1EC55B2E00B75E1F /* LivenessDetection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LivenessDetection.hpp; path = LivenessDetection/LivenessDetection.hpp; sourceTree = "<group>"; };
 		4CFEDDDF1ECC2AF800FB1348 /* faceOutline.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = faceOutline.jpg; path = FaceLivenessDetection/pic/faceOutline.jpg; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 			files = (
 				4C2F79B41EC476C7002D7AC3 /* libopencv_imgproc.3.2.0.dylib in Frameworks */,
 				4CFF61691EBB1F35002F4DA8 /* libopencv_highgui.3.2.0.dylib in Frameworks */,
-				4CA4999B1ECAEBA8005D1368 /* libfreetype.6.dylib in Frameworks */,
 				4C2F79BA1EC4787B002D7AC3 /* libopencv_video.3.2.0.dylib in Frameworks */,
 				4CFF61681EBB1F35002F4DA8 /* libopencv_core.3.2.0.dylib in Frameworks */,
 				4C2F79BC1EC4789A002D7AC3 /* libopencv_calib3d.3.2.0.dylib in Frameworks */,
@@ -363,7 +360,6 @@
 		4CFF5F891EBB01F4002F4DA8 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				4CA4999A1ECAEBA8005D1368 /* libfreetype.6.dylib */,
 				4C2F79BB1EC4789A002D7AC3 /* libopencv_calib3d.3.2.0.dylib */,
 				4C2F79B91EC4787B002D7AC3 /* libopencv_video.3.2.0.dylib */,
 				4C2F79B71EC47861002D7AC3 /* libopencv_videoio.3.2.0.dylib */,
@@ -562,15 +558,13 @@
 					/usr/local/include,
 					/usr/local/include/opencv,
 					/include,
-					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/LandmarkDetector/include,
-					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/./include,
-					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/include,
+					"$(PROJECT_DIR)/FaceLivenessDetection/LandmarkDetector/include",
+					"$(PROJECT_DIR)/FaceLivenessDetection/seetaFace/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/opencv3/3.2.0/lib,
 					"$(PROJECT_DIR)/FaceLivenessDetection/lib",
-					/usr/local/Cellar/freetype/2.7.1/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -584,15 +578,13 @@
 					/usr/local/include,
 					/usr/local/include/opencv,
 					/include,
-					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/LandmarkDetector/include,
-					/Users/liuyan/Desktop/OpenFace/lib/local/FaceAnalyser/./include,
-					/Users/liuyan/Code/FaceLivenessDetection/FaceLivenessDetection/seetaFace/include,
+					"$(PROJECT_DIR)/FaceLivenessDetection/LandmarkDetector/include",
+					"$(PROJECT_DIR)/FaceLivenessDetection/seetaFace/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/Cellar/opencv3/3.2.0/lib,
 					"$(PROJECT_DIR)/FaceLivenessDetection/lib",
-					/usr/local/Cellar/freetype/2.7.1/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

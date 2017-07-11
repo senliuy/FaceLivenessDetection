@@ -29,6 +29,7 @@ std::cout << "Error: " << stream << std::endl
 #define THRESHOLD_MOVE 17           //[0, 无穷]， 20帧算法的输出总和，越小越严
 #define THRESHOLD_EYE 0.7           //[0，1】, 眼睛特征点变化的方差的比例， 越大越严
 #define ORIENTATION_FRAME_NUM 20    //转头搜集的帧数
+#define THRESHOLD_ALIGH 0.8         //对齐要求的阈值，越小越严
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
@@ -63,7 +64,7 @@ float calculateUorV(Mat flow, int m_left, int m_right, int n_left, int n_right, 
 float opticalDifference(Mat flow);
 bool mouseIdentificate(Mat &temp, std::vector<Point2f> landmark, std::vector<float> &closedMouse, std::vector<float> &openedMouse, int &numofClosedMouses, int &numofOpenedMouses,  Mat &mouseIdenImg);
 bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNum, float &sumOriValue,
-                             bool &left_face, bool &right_face);
+                             bool &left_face, bool &right_face, float &ori_face, float x_ori);
 bool moveIdentificate(Mat temp, std::vector<Point2f> landmark, Mat &gray, Mat &preGray, Mat &flow,
                       int &optFlowPicNumber, std::vector<float> &optFlowDiffArray, Mat &moveIdenImg);
 bool eyeIdentificate(Mat temp, bool detection_success, bool clnf_eye_model, std::vector<Point2f> landmarks, std::vector<std::vector<double>> &direction, int frame_count, bool &first_iden, Mat &eyeIdenImg);
@@ -82,15 +83,16 @@ int main (int argc, char **argv){
     double visualisation_boundary = 0.2;
     
 //  判断模块开关: true 表示模块验证已经通过
-    bool MoveIdentification = true;
-    bool OrientationIdentification = true;
-    bool MouseIdentification = true;
+    bool MoveIdentification = false;
+    bool OrientationIdentification = false;
+    bool MouseIdentification = false;
     bool EyeIdentification = false;
     //方向
     int oriNum = 0;
     float sumOriValue = 0.0;
     bool left_face = false;
     bool right_face = false;
+    float ori_face = 0.0;
     //嘴部
     std::vector<float> closedMouse = {INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX};
     std::vector<float> openedMouse = {INT_MIN, INT_MIN, INT_MIN, INT_MIN, INT_MIN};
@@ -163,62 +165,83 @@ int main (int argc, char **argv){
         // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
         double detection_certainty = clnf_model.detection_certainty;
         // Only draw if the reliability is reasonable, the value is slightly ad-hoc
-        if (detection_certainty < visualisation_boundary){
+        bool noShelter = detection_certainty < visualisation_boundary;
+        if (noShelter){
             LandmarkDetector::Draw(display_image, clnf_model);
-        }
-        
-        std::vector<double> openface_landmarks = clnf_model.detected_landmarks;
-        std::vector<cv::Point2f> landmarks;
-        openFace2dlib_landmarks(landmarks, openface_landmarks);
-        if(!clnf_model.detection_success){
-            cv::putText(display_image, "Putting your face in the middle", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+            double vis_certainty = detection_certainty;
+            if (vis_certainty > 1)
+                vis_certainty = 1;
+            if (vis_certainty < -1)
+                vis_certainty = -1;
+            vis_certainty = (vis_certainty + 1) / (visualisation_boundary + 1);
+            // A rough heuristic for box around the face width
+            int thickness = (int)std::ceil(2.0* ((double)captured_image.cols) / 640.0);
+            float cx = captured_image.cols / 2.0f;
+            float cy = captured_image.rows / 2.0f;
+            float fx = 500 * (captured_image.cols / 640.0);
+            float fy = 500 * (captured_image.rows / 480.0);
+            fx = (fx + fy) / 2.0;
+            fy = fx;
+            cv::Vec6d world_pose = LandmarkDetector::GetCorrectedPoseWorld(clnf_model, fx, fy, cx, cy);
+            bool aligned = abs(world_pose[3]) + abs(world_pose[4]) + abs(world_pose[5]) < THRESHOLD_ALIGH;
+            // Draw it in reddish if uncertain, blueish if certain
+//            LandmarkDetector::DrawBox(display_image, world_pose, cv::Scalar((1 - vis_certainty)*255.0, 0, vis_certainty * 255), thickness, fx, fy, cx, cy);
+            
+            std::vector<double> openface_landmarks = clnf_model.detected_landmarks;
+            std::vector<cv::Point2f> landmarks;
+            openFace2dlib_landmarks(landmarks, openface_landmarks);
+            if(aligned){
+                //STEP 1.1: 光流
+                if(!OrientationIdentification && !MouseIdentification && !MoveIdentification && !EyeIdentification){
+                    cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                    cv::putText(display_image, "Stare at your phone and don't move", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                    MoveIdentification = moveIdentificate(captured_image, landmarks, gray, preGray, flow, optFlowPicNumber, optFlowDiffArray, moveIdenImg);
+                }
+                //STEP 1.2: 转向
+                if(!OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
+                    cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                    OrientationIdentification = orientationIdentificate(display_image, landmarks, oriNum, sumOriValue, left_face, right_face, ori_face, world_pose[0]);
+                }
+                
+                //STEP2: 张闭嘴验证
+                if(OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
+                    cv::putText(display_image, "STEP2 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                    cv::putText(display_image, "Move Your Mouse", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                    MouseIdentification = mouseIdentificate(captured_image, landmarks, closedMouse, openedMouse, numofClosedMouses, numofOpenedMouses,  mouseIdenImg);
+                }
+                
+                //STEP3: 眨眼认证
+                if (OrientationIdentification && MouseIdentification && MoveIdentification && !EyeIdentification){
+                    cv::Mat face = clnf_model.face_template;
+                    cv::putText(display_image, "STEP3 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                    cv::putText(display_image, "Blink Eyes", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
+                    vector<cv::Point2f> relative_landmarks = landmarks;
+                    relativeLandmarks(landmarks, relative_landmarks, clnf_model);
+                    bool clnf_eye_model = clnf_model.eye_model;
+                    EyeIdentification = eyeIdentificate(captured_image, detection_success, clnf_eye_model, landmarks, direction, frame_count, first_iden, eyeIdenImg);
+                    //EyeIdentification = eyeIdentificate2(clnf_model, landmarks);
+                }
+            }
+            else{
+                cv::putText(display_image, "Align with the outline!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+            }
+            //验证通过, 保存各步骤验证人脸, 输出结果
+            if(OrientationIdentification && MouseIdentification && MoveIdentification && EyeIdentification){
+                cv::putText(display_image, "Passed!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+                if(!writedImage){
+                    double t_end = cvGetTickCount();
+                    cout<<"Time Consuming: "<<(t_end - t_start)/(double)cvGetTickFrequency()/1000000<<"s"<<endl;
+                    cout<<"Frame Used: "<<frame_count<<endl;
+                    std::cout<<"Detection Succeed, Wrting Photos"<<std::endl;
+                    if(!moveWriteImage)   cv::imwrite("movePic.jpg", moveIdenImg);
+                    if(!mouseWriteImage)  cv::imwrite("mousePic.jpg", mouseIdenImg);
+                    if(!eyeWriteImage) cv::imwrite("eyePic.jpg", eyeIdenImg);
+                    writedImage = true;
+                }
+            }
+            
         }else{
-        
-            //STEP 1.1: 光流
-            if(!OrientationIdentification && !MouseIdentification && !MoveIdentification && !EyeIdentification){
-                cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                cv::putText(display_image, "Stare at your phone and don't move", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
-                MoveIdentification = moveIdentificate(captured_image, landmarks, gray, preGray, flow, optFlowPicNumber, optFlowDiffArray, moveIdenImg);
-            }
-            //STEP 1.2: 转向
-            if(!OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
-                cv::putText(display_image, "STEP1 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                OrientationIdentification = orientationIdentificate(display_image, landmarks, oriNum, sumOriValue, left_face, right_face);
-            }
-            
-            //STEP2: 张闭嘴验证
-            if(OrientationIdentification && !MouseIdentification && MoveIdentification && !EyeIdentification){
-                cv::putText(display_image, "STEP2 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                cv::putText(display_image, "Move Your Mouse", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
-                MouseIdentification = mouseIdentificate(captured_image, landmarks, closedMouse, openedMouse, numofClosedMouses, numofOpenedMouses,  mouseIdenImg);
-            }
-            
-            //STEP4: 眨眼认证
-            if (OrientationIdentification && MouseIdentification && MoveIdentification && !EyeIdentification){
-                cv::Mat face = clnf_model.face_template;
-                cv::putText(display_image, "STEP3 Identificating ... ", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-                cv::putText(display_image, "Blink Eyes", Point2f(10,40), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,255,0));
-                vector<cv::Point2f> relative_landmarks = landmarks;
-                relativeLandmarks(landmarks, relative_landmarks, clnf_model);
-                bool clnf_eye_model = clnf_model.eye_model;
-                EyeIdentification = eyeIdentificate(captured_image, detection_success, clnf_eye_model, landmarks, direction, frame_count, first_iden, eyeIdenImg);
-                //EyeIdentification = eyeIdentificate2(clnf_model, landmarks);
-            }
-            
-        }
-        //验证通过, 保存各步骤验证人脸, 输出结果
-        if(OrientationIdentification && MouseIdentification && MoveIdentification && EyeIdentification){
-            cv::putText(display_image, "Passed!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
-            if(!writedImage){
-                double t_end = cvGetTickCount();
-                cout<<"Time Consuming: "<<(t_end - t_start)/(double)cvGetTickFrequency()/1000000<<"s"<<endl;
-                cout<<"Frame Used: "<<frame_count<<endl;
-                std::cout<<"Detection Succeed, Wrting Photos"<<std::endl;
-                if(!moveWriteImage)   cv::imwrite("movePic.jpg", moveIdenImg);
-                if(!mouseWriteImage)  cv::imwrite("mousePic.jpg", mouseIdenImg);
-                if(!eyeWriteImage) cv::imwrite("eyePic.jpg", eyeIdenImg);
-                writedImage = true;
-            }
+            cv::putText(display_image, "Don't hide your face!", Point2f(10,20), FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
         }
         
         if (!det_parameters.quiet_mode){
@@ -302,7 +325,7 @@ bool correctFacePosition(std::vector<Point2f> landmark){
 
 //检测用户是否按指令摇头
 bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNum,
-                             float &sumOriValue, bool &left_face, bool &right_face){
+                             float &sumOriValue, bool &left_face, bool &right_face, float &ori_face, float x_ori){
     Point2f point_nose = landmark[33];
     Point2f point_left_eye = landmark[36];
     Point2f point_right_eye = landmark[45];
@@ -327,18 +350,21 @@ bool orientationIdentificate(Mat temp, std::vector<Point2f> landmark, int &oriNu
         }
         oriNum++;
         sumOriValue += oriVal;
+        ori_face += x_ori;
     }else{
         
         double res = sumOriValue/oriNum;
         cout<<"Orientation output value "<<res<<endl;
-        if(res > 1/THRESHOLD_ORIENTATION ){
+        cout<<"face ori"<<ori_face<<endl;
+        if(res > 1/THRESHOLD_ORIENTATION && ori_face > 300){
             if(!left_face && !right_face) left_face = true;
         }
-        if(res < THRESHOLD_ORIENTATION ){
+        if(res < THRESHOLD_ORIENTATION && ori_face < -300){
             if(left_face && !right_face) right_face = true;
         }
         oriNum = 0;
         sumOriValue = 0.0;
+        ori_face = 0.0;
     }
     return left_face && right_face;
 }
@@ -549,7 +575,6 @@ bool eyeIdentificate(Mat temp, bool detection_success, bool clnf_eye_model, std:
     return false;
 }
 
-//眨眼验证
 void relativeLandmarks(const vector<Point2f> inputLandmarks, vector<Point2f> &outputLandmarks, LandmarkDetector::CLNF &clnf_model){
     float relative_x = clnf_model.face_x_pos;
     float relative_y = clnf_model.face_y_pos;
